@@ -1,0 +1,9 @@
+﻿global using E_Commerce.Application.Interfaces.Repositories;
+global using E_Commerce.Domain.Entities;
+global using System.Linq.Expressions;
+global using E_Commerce.Infrastructure.Data;
+global using Microsoft.EntityFrameworkCore;
+global using E_Commerce.Infrastructure.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;  
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.Extensions.DependencyInjection;

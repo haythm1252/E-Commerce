@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Category>
+
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "_CustomLayout";
+}
+
+
+<div class="container mt-5 shadow-lg">
+    <div class="container d-flex justify-content-between align-items-center  mb-4 ">
+        <h1 class="display-5 fw-bold mt-5">Categories</h1>
+        <a asp-action="Create" class="btn btn-success btn-lg mt-5">
+            <i class="fa fa-plus"></i> Create New Category
+        </a>
+    </div>
+    <div class="container mt-5 mb-5 ">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Top Category</th>
+                            <th>Section</th>
+                            <th>Products Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td>@category.Id</td>
+                                <td>
+                                    <img src="~/@category.ImageUrl" alt="Category Image" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                </td>
+                                <td class="fw-bold">@category.Name</td>
+                                <td>
+                                    @if (category.IsTopCategory == true)
+                                    {
+                                        <span class="badge bg-success">Top</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (category.IsSection == true)
+                                    {
+                                        <span class="badge bg-primary">Section</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No</span>
+                                    }
+                                </td>
+                                <td>@(category.Products?.Count ?? 0)</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@category.Id" class="btn btn-info btn-md">
+                                            <i class="fa fa-info-circle"></i> Details
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@category.Id" class="btn btn-warning btn-md mx-2">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-md">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <p>No categories found. Click "Create New Category" to add one.</p>
+            </div>
+        }
+    </div>
+
+</div>
