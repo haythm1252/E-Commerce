@@ -16,9 +16,9 @@ namespace E_Commerce.Infrastructure.Repositories
         }
 
 
-        public int Save()
+        public async Task<int> SaveChangesAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
         public void Dispose()

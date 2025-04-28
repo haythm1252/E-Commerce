@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using E_Commerce.Application.Common;
 
 
-namespace E_Commerce.Infrastructure.Helpers
+namespace E_Commerce.Web.Helpers
 {
     public class FileUploadService : IFileUploadService
     {
@@ -37,7 +38,7 @@ namespace E_Commerce.Infrastructure.Helpers
                 string FilePath = Path.Combine(FolderPath, FileName);
 
                 //add the file in the server
-                using (var stream = new FileStream(FilePath, FileMode.Create))
+                using(var stream = new FileStream(FilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
@@ -71,7 +72,5 @@ namespace E_Commerce.Infrastructure.Helpers
                 throw new ApplicationException($"Error Deleting file: {ex.Message}", ex);
             }
         }
-
-
     }
 }

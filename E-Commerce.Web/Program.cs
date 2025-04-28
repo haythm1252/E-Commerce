@@ -1,8 +1,10 @@
 using E_Commerce.Application.Interfaces.Repositories;
-using E_Commerce.Application.Services;
 using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Identity;
 using E_Commerce.Infrastructure.Repositories;
+using E_Commerce.Web.Helpers;
+using E_Commerce.Web.Services.Implementations;
+using E_Commerce.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
@@ -29,8 +31,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 //Add sevices
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IFileUploadService), typeof(FileUploadService));
+builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+builder.Services.AddScoped(typeof(IUnitOfWork),typeof(UnitOfWork));
 
 var app = builder.Build();
 

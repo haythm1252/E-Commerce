@@ -1,0 +1,63 @@
+﻿@model CategoryVM
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_CustomLayout";
+}
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Create New Category</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mt-5">
+                            <div class="form-check form-switch mb-3">
+                                <input asp-for="IsTopCategory" class="form-check-input" type="checkbox"/>
+                                <label asp-for="IsTopCategory" class="form-check-label"></label>
+                            </div>
+
+                            <div class="form-check form-switch mb-4">
+                                <input asp-for="IsSection" class="form-check-input" type="checkbox"/>
+								<label asp-for="IsSection" class="form-check-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label asp-for="Image" class="form-label"></label>
+                            <input asp-for="Image" type="file" class="form-control" accept="image/*"/>
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+                        <div class="mt-2">
+                            <label class="form-label">Image Preview:</label>
+                            <div class="border rounded p-2" style="width:100%; height:150px; display:flex; align-items:center; justify-content:center; background-color:#f8f9fa;">
+                                <img class="imagePreview d-none" style="max-width: 100%; max-height: 100%;"/>
+                                <span class="no-image text-muted">No image selected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Create Category</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/image-preview.js" asp-append-version="true"></script>
+}
+
+
+

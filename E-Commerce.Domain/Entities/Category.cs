@@ -14,8 +14,8 @@ namespace E_Commerce.Domain.Entities
         [MaxLength(150)]
         public string Name { get; set; } = string.Empty;
 
-        public bool? IsTopCategory { get; set; } 
-        public bool? IsSection { get; set; }
+        public bool IsTopCategory { get; set; } = false;
+        public bool IsSection { get; set; }=false;
 
         [MaxLength(500)]
         public string ImageUrl { get; set; } = string.Empty;

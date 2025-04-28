@@ -1,11 +1,12 @@
-﻿using System;
+﻿using E_Commerce.Application.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
-namespace E_Commerce.Infrastructure.Helpers
+
+namespace E_Commerce.Web.Helpers
 {
     public interface IFileUploadService
     {
