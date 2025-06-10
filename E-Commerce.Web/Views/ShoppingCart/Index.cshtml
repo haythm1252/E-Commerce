@@ -1,0 +1,119 @@
+﻿@model IEnumerable<ShoppingCartItem>
+@{
+    ViewData["Title"] = "Shopping Cart";
+    Layout = "_Layout";
+    var cartId = Model.FirstOrDefault()?.ShoppingCartId;
+}
+
+<div class="container-fluid py-5 min-vh-100">
+    <div class="container">
+
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h1 class="display-4 fw-bold  mb-3" style="color:#0e5aa7;">
+                    <i class="bi bi-cart3 me-3"></i>Shopping Cart
+                </h1>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 offset-lg-0">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="card shadow-lg border-0 mb-4">
+                        <div class="card-header  text-white py-3" style="background-color: #0e5aa7;">
+                            <h5 class="mb-0"><i class="bi bi-bag me-2"></i>Your Items </h5>
+                        </div>
+                        <div class="card-body p-5">
+                            @foreach (var item in Model)
+                            {
+                                <div class="cart-item row align-items-center border rounded-3 p-4 mb-4 bg-white shadow-sm">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-4">
+                                                <img src="/@item.Product.ImageUrl"
+                                                     class="img-fluid rounded-3 border shadow-sm"
+                                                     style="width: 140px; height: 140px; object-fit: cover;"
+                                                     alt="@item.Product.Name" />
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold text-dark mb-3">@item.Product.Name</h5>
+                                                <div class="text-muted">
+                                                    <div class="mb-1"><i class="bi bi-tag me-2"></i>Unit Price: <span class="fw-semibold">@item.Product.Price.ToString("F2") EGP</span></div>
+                                                    <div><i class="bi bi-box me-2"></i>Stock: <span class="fw-semibold text-success">@item.Product.Stock available</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="text-center">
+                                                <div class="h4 text-danger fw-bold mb-2">
+                                                    <span class="price" data-unitprice="@item.Product.Price">@item.TotalPrice.ToString("F2") EGP</span>
+                                                </div>
+                                                <small class="text-muted">Total Price</small>
+                                            </div>
+
+                                            <div class="product-quantity-control">
+                                                <div class="input-group shadow-sm">
+                                                    <button class="btn btn-outline-primary btn-lg decrease-btn cartbtn" type="button">
+                                                        <i class="bi bi-dash fw-bold"></i>
+                                                    </button>
+                                                    <input type="text"
+                                                           class="form-control form-control-lg text-center fw-bold quantity-input quantity"
+                                                           style="width:80px; max-width:80px;"
+                                                           data-id="@item.Product.Id"
+                                                           min="1"
+                                                           max="@item.Product.Stock"
+                                                           value="@item.Quantity">
+                                                    <button class="btn btn-outline-primary btn-lg increase-btn cartbtn" type="button">
+                                                        <i class="bi bi-plus fw-bold"></i>
+                                                    </button>
+                                                </div>
+                                                <small class="text-muted d-block text-center mt-2">Quantity</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center py-4">
+                        <h3 id="cart-total" class="mb-0 fw-bold text-dark">
+                            Total: @Model.Sum(item => item.TotalPrice).ToString("F2") EGP
+                        </h3>
+                        <a asp-controller="ShoppingCart" asp-action="Checkout" asp-route-cartId="@cartId" class="btn btn-success btn-lg cartbtn px-4 py-3 fw-bold">
+                            <i class="bi bi-credit-card me-2"></i>
+                            Checkout
+                        </a>
+                    </div>
+                }
+                else
+                {
+
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-cart-x display-1 text-muted mb-4"></i>
+                            <h3 class="text-muted mb-3">Your cart is empty</h3>
+                            <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+                            <a asp-controller="Home" asp-action="Index" class="btn cartbtn me-5 ms-5 btn-lg px-4">
+                                <i class="bi bi-shop me-2"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/shopping-cart.js" asp-append-version="true"></script>
+}

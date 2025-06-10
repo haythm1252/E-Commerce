@@ -62,6 +62,12 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PaymentId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -113,7 +119,7 @@ namespace E_Commerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("BestSeller")
+                    b.Property<bool>("BestSeller")
                         .HasColumnType("bit");
 
                     b.Property<int>("CategoryId")
@@ -155,14 +161,10 @@ namespace E_Commerce.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("ShoppingCarts");
                 });
@@ -448,15 +450,6 @@ namespace E_Commerce.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("E_Commerce.Domain.Entities.ShoppingCart", b =>
-                {
-                    b.HasOne("E_Commerce.Infrastructure.Identity.ApplicationUser", null)
-                        .WithOne("ShoppingCart")
-                        .HasForeignKey("E_Commerce.Domain.Entities.ShoppingCart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("E_Commerce.Domain.Entities.ShoppingCartItem", b =>
                 {
                     b.HasOne("E_Commerce.Domain.Entities.Product", "Product")
@@ -552,9 +545,6 @@ namespace E_Commerce.Infrastructure.Migrations
             modelBuilder.Entity("E_Commerce.Infrastructure.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("ShoppingCart")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -23,7 +23,7 @@ namespace E_Commerce.Domain.Entities
         public decimal Price { get; set; }
         public int Stock { get; set; }
 
-        public bool? BestSeller { get; set; }
+        public bool BestSeller { get; set; }
 
 
         // Category

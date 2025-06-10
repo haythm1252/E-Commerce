@@ -29,7 +29,7 @@ namespace E_Commerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CategoryVM model)
+        public async Task<IActionResult> Create(CreateCategoryVM model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -44,7 +44,7 @@ namespace E_Commerce.Web.Controllers
             var category = await _CategoryService.GetByIdAsync(id)!;
             if (category == null)
                 return View("NotFound");
-            var model = new CategoryVM
+            var model = new EditCategoryVM
             {
                 Id = category.Id,
                 Name = category.Name,
@@ -56,7 +56,7 @@ namespace E_Commerce.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CategoryVM model)
+        public async Task<IActionResult> Edit(EditCategoryVM model)
         {
             if(!ModelState.IsValid)
                 return View(model);
@@ -66,6 +66,13 @@ namespace E_Commerce.Web.Controllers
             TempData["Message"] = result? "Category updated successfully." : "Error occurred while updating the category.";
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _CategoryService.DeleteAsync(id);
+            return result ? Ok() : BadRequest();
         }
     }
 }

@@ -1,0 +1,87 @@
+﻿@model Product
+@{
+    ViewData["Title"] = Model.Name;
+    if (User.IsInRole("Admin"))
+        Layout = "_DashboardLayout";
+    else
+        Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/styles2.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/product-details.css" asp-append-version="true" />
+
+
+<body >
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <!-- Product Image -->
+            <div class="col-lg-5 mb-4">
+                <img src="/@Model.ImageUrl" class="img-fluid rounded" alt="Product Image">
+            </div>
+
+            <!-- Product Details -->
+            <div class="col-lg-7 mt-4">
+                <h2 class="fw-bold">@Model.Name</h2>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <span class="badge bg-success">@Model.Category.Name</span>
+                    </div>
+                </div>
+                <h3 class="fw-bold text-primary mb-4">@Model.Price EGP </h3>
+                <p class="mb-4">@Model.Description</p>
+                @if (!User.IsInRole("Admin"))
+                {
+                    <div class="d-flex align-items-center gap-3 mt-4">
+                        <!-- Quantity Controls -->
+                        <div class="product-quantity-control d-flex align-items-center">
+                            <button class="quantity-btn rounded-start cartbtn" type="button">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="text" class="quantity-input" id="quantity" min="1" max="@Model.Stock" value="1">
+                            <button class="quantity-btn cartbtn" type="button">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+
+                        <!-- Add to Cart Button -->
+                        <button class="btn cartbtn btn-lg px-4 py-2">
+                            <i class="bi bi-cart-fill me-2"></i> Add to Cart
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <section >
+        <h2 class="mb-5 fw-bold mt-5 pt-2">Related Products</h2>
+        <div class="row mt-5 mb-5">
+            @foreach (var pro in Model.Category.Products)
+            {
+                @if (pro.Id == Model.Id)
+                    continue;
+
+                <div class="col-6 col-md-3">
+                    <div class="card product-card h-100">
+                        <a asp-action="Details" asp-controller="Product" asp-route-id="@pro.Id" class="text-decoration-none text-dark">
+                            <span class="badge bg-info category-badge">@Model.Category.Name</span>
+                            <img src="/@pro.ImageUrl" class="card-img-top" alt="Product">
+                            <div class="card-body">
+                                <h5 class="card-title">@pro.Name</h5>
+                                <p class="card-text fw-bold text-primary">@pro.Price EGP</p>
+                            </div>
+                        </a>
+                        <button class="btn cartbtn mt-3 ms-4 me-4">
+                            <i class="bi bi-cart-fill me-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+    
+</body>
+@section Scripts {
+<script src="~/js/product-details.js" asp-append-version="true"></script>
+}

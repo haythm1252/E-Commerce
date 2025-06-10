@@ -26,13 +26,6 @@ namespace E_Commerce.Infrastructure.Data
         {
             base.OnModelCreating(builder);
             // Add any additional model configuration here
-
-            // User_shoppingcart 
-            builder.Entity<ShoppingCart>()
-                .HasOne<ApplicationUser>()
-                .WithOne(u => u.ShoppingCart)
-                .HasForeignKey<ShoppingCart>(sc => sc.UserId);
-
             // User_orders
             builder.Entity<Order>()
                 .HasOne<ApplicationUser>()

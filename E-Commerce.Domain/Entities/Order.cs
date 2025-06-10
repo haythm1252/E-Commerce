@@ -15,11 +15,10 @@ namespace E_Commerce.Domain.Entities
 
         [Required]
         public decimal TotalPrice { get; set; }
-
-        //relationships
+        public bool IsPaid { get; set; }
+        public string? PaymentId { get; set; }
         public string UserId { get; set; }
 
-        // OrderItems
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

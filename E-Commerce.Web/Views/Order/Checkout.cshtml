@@ -1,0 +1,30 @@
+﻿@model CheckoutVM
+@{
+    ViewBag.Title = "Checkout";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block; 
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://accept.paymob.com/api/acceptance/iframes/@Model.IframeId?payment_token=@Model.PaymentToken"></iframe>
+</body>
+</html>

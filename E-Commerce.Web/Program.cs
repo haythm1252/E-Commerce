@@ -33,7 +33,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 //Add sevices
 builder.Services.AddScoped(typeof(IFileUploadService), typeof(FileUploadService));
 builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+builder.Services.AddScoped(typeof(IProductService), typeof(ProductService));
+builder.Services.AddScoped(typeof(IShoppingCartService), typeof(ShoppingCartService));
+builder.Services.AddScoped(typeof(IOrderService), typeof(OrderService));
 builder.Services.AddScoped(typeof(IUnitOfWork),typeof(UnitOfWork));
+
+builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
 var app = builder.Build();
 

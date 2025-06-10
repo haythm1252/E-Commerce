@@ -17,7 +17,7 @@ namespace E_Commerce.Infrastructure.Repositories
             return await _dbset.FindAsync(id);
         }
 
-        public async Task<T> FindAsync(Expression<Func<T, bool>> criteria, params Expression<Func<T, object>>[] includes)
+        public async Task<T>? FindAsync(Expression<Func<T, bool>> criteria, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbset;
 

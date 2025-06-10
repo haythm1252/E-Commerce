@@ -9,5 +9,7 @@ namespace E_Commerce.Application.Interfaces.Repositories
 {
     public interface ICategoryRepository : IBaseRepository<Category>
     {
+        
     }
+    
 }

@@ -4,16 +4,23 @@
   "libraries": [
     {
       "library": "bootstrap-icons@1.11.3",
-      "destination": "wwwroot/bootstrap-icons/",
+      "destination": "wwwroot/bootstrap-icons/"
+    },
+    {
+      "library": "sweetalert2@11.16.1",
+      "destination": "wwwroot/sweetalert2/",
       "files": [
-        "font/bootstrap-icons.min.css"
+        "sweetalert2.min.js",
+        "sweetalert2.min.css"
+      ]
+    },
+    {
+      "library": "toastr.js@2.1.4",
+      "destination": "wwwroot/toastr.js/",
+      "files": [
+        "toastr.min.js",
+        "toastr.min.css"
       ]
     }
-  ,
-{
-  "provider": "cdnjs",
-  "library": "bootstrap-icons@1.11.3",
-  "destination": "wwwroot/bootstrap-icons/"
-}
-]
+  ]
 }
