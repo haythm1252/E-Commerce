@@ -22,10 +22,7 @@ namespace E_Commerce.Web.Services.Implementations
         {
             return await _unitOfWork.Products.GetByIdAsync(id);
         }
-        public async Task<Product>? FindAsync(Expression<Func<Product, bool>> criteria, params Expression<Func<Product, object>>[] includes)
-        {
-            return await _unitOfWork.Products.FindAsync(criteria, includes);
-        }
+        
 
         public async Task<IEnumerable<Product>> GetAllAsync(Expression<Func<Product, bool>>? criteria = null, params Expression<Func<Product, object>>[] includes)
         {
@@ -117,6 +114,14 @@ namespace E_Commerce.Web.Services.Implementations
                 return true;
             }
             return false;
+        }
+
+        public async Task<List<Product>> SearchById(int id)
+        {
+            var product = await _unitOfWork.Products.FindAsync(p => p.Id == id,p => p.Category);
+            if (product == null)
+                return new List<Product>();
+            return new List<Product> { product };
         }
     }
 }

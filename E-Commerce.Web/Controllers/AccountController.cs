@@ -1,27 +1,61 @@
 ﻿using E_Commerce.Infrastructure.Identity;
+using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace E_Commerce.Web.Controllers
 {
     public class AccountController : Controller
     {
-        public readonly UserManager<ApplicationUser> _userManager;
-        public readonly SignInManager<ApplicationUser> _signInManager;
-        public readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IOrderService _orderService;
         public AccountController(UserManager<ApplicationUser> UserManager,SignInManager<ApplicationUser> signInManager, 
-                RoleManager<IdentityRole> roleManager)
+                RoleManager<IdentityRole> roleManager, IOrderService orderService)
         {
             _userManager = UserManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _orderService = orderService;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var users = await _userManager.GetUsersInRoleAsync("Customer");
+            return View(users);
         }
+        public async Task<IActionResult> Profile(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var userDetailsVM = await _orderService.GetUserWithOrders(user!.Id);
+            if (userDetailsVM == null)
+                return NotFound();
 
+            return View(userDetailsVM);
+        }
+        public async Task<IActionResult> Details(string id)
+        {
+            var userDetailsVM = await _orderService.GetUserWithOrders(id);
+            if (userDetailsVM == null)
+                return NotFound();
+
+            return View(userDetailsVM);
+        }
+        public async Task<IActionResult> SearchById(string Email)
+        {
+            if (string.IsNullOrEmpty(Email))
+            {
+                return BadRequest("User Email cannot be null or empty.");
+            }
+            var user = await _userManager.FindByEmailAsync(Email);
+            if (user == null)
+            {
+                return NotFound($"User with Email {Email} not found.");
+            }
+            return PartialView("_UsersTable", new List<ApplicationUser> { user });
+        }
         [HttpGet]
         public IActionResult Register()
         {
@@ -52,6 +86,7 @@ namespace E_Commerce.Web.Controllers
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 Address = model.Address,
+                CreatedAt = DateTime.Now
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 

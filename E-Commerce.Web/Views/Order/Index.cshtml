@@ -1,0 +1,154 @@
+﻿@model List<OrderVM>
+@{
+    ViewData["Title"] = "Orders";
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                        <div class="mb-3 mb-md-0">
+                            <h1 class="display-5 fw-bold text-dark-emphasis mb-1">Orders Management</h1>
+                        </div>
+                        <a class="btn btn-primary btn-lg shadow-sm d-flex align-items-center gap-2"
+                           asp-controller="Order" asp-action="ConfirmOrders">
+                            <i class="bi bi-arrow-repeat"></i>
+                            <span>Verify Pending Orders</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["ConfirmOrders"] != null)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-primary alert-dismissible fade show shadow-sm" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    @TempData["ConfirmOrders"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light border-0">
+                    <h5 class="card-title mb-0 d-flex align-items-center">
+                        <i class="bi bi-funnel me-2 text-primary"></i>
+                        Filter Orders
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="SearchInput" placeholder="Search by Order ID...">
+                                <button class="btn btn-outline-secondary" type="button" id="SearchBtn">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-group flex-wrap" role="group" aria-label="Filter Orders">
+                        <button type="button" class="btn btn-outline-primary filter-btn active"
+                                data-filter="@OrdersFilters.All.ToString()">
+                            <i class="bi bi-list-ul me-1"></i>All Orders
+                        </button>
+                        <button type="button" class="btn btn-outline-info filter-btn"
+                                data-filter="@OrdersFilters.Today.ToString()">
+                            <i class="bi bi-calendar-day me-1"></i>Today
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary filter-btn"
+                                data-filter="@OrdersFilters.Last30Days.ToString()">
+                            <i class="bi bi-calendar-month me-1"></i>Last 30 Days
+                        </button>
+                        <button type="button" class="btn btn-outline-warning filter-btn"
+                                data-filter="@OrdersFilters.Pending.ToString()">
+                            <i class="bi bi-clock me-1"></i>Pending
+                        </button>
+                        <button type="button" class="btn btn-outline-danger filter-btn"
+                                data-filter="@OrdersFilters.Faild.ToString()">
+                            <i class="bi bi-x-circle me-1"></i>Failed
+                        </button>
+                        <button type="button" class="btn btn-outline-success filter-btn"
+                                data-filter="@OrdersFilters.Success.ToString()">
+                            <i class="bi bi-check-circle me-1"></i>Success
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light border-0">
+                    <h5 class="card-title mb-0 d-flex align-items-center">
+                        <i class="bi bi-table me-2 text-primary"></i>
+                        Orders List
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div id="ordersTable">
+                        <partial name="_OrderTable" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('#SearchBtn').on('click', function () {
+                var input = $('#SearchInput').val();
+                if(!input){return;}
+                $('#ordersTable').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                $.ajax({
+                    url: '@Url.Action("Search", "Order")',
+                    data: { id: input },
+                    success: function (result) {
+                        $('#ordersTable').html(result);
+                    },
+                    error: function () {
+                        $('#ordersTable').html('<div class="alert alert-danger m-3"><i class="bi bi-exclamation-triangle me-2"></i>Something went wrong. Please try again.</div>');
+                    }
+                });
+            });
+        });
+
+        $('#SearchInput').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        $(document).ready(function () {
+            $('.filter-btn').on('click', function () {
+                $('.filter-btn').removeClass('active');
+                $(this).addClass('active');
+                var selectedFilter = $(this).data('filter');
+                $('#ordersTable').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                $.ajax({
+                    url: '@Url.Action("OrderTable", "Order")',
+                    data: { filter: selectedFilter },
+                    success: function (result) {
+                        $('#ordersTable').html(result);
+                    },
+                    error: function () {
+                        $('#ordersTable').html('<div class="alert alert-danger m-3"><i class="bi bi-exclamation-triangle me-2"></i>Something went wrong. Please try again.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+}

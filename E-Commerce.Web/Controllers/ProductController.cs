@@ -83,5 +83,10 @@ namespace E_Commerce.Web.Controllers
         {
             return await _productService.DeleteAsync(id) ? Ok() : BadRequest();
         }
+        public async Task<IActionResult> SearchById(int id)
+        {
+            var model = await _productService.SearchById(id);
+            return PartialView("_ProductTable", model);
+        }
     }
 }

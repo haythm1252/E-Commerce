@@ -44,7 +44,7 @@
 
                     @if (User.Identity!.IsAuthenticated)
                     {
-                        <a class="btn fs-6 rounded-pill text-white me-2 cartbtn">
+                        <a asp-controller="Account" asp-action="Profile" asp-route-email="@User.Identity.Name" class="btn fs-6 rounded-pill text-white me-2 cartbtn">
                             <i class="bi bi-person-circle me-2 fs-4"></i>
                             Hello @User.Identity.Name
                         </a>

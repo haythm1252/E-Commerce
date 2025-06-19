@@ -19,5 +19,12 @@ namespace E_Commerce.Infrastructure.Repositories
                 .AsNoTracking()
                 .SingleOrDefaultAsync(o => o.Id == id);
         }
+        public async Task<List<Order>> GetAllOrderWithProducts(Expression<Func<Order, bool>> criteria)
+        {
+            return await _context.Orders.Where(criteria)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ToListAsync();
+        }
     }
 }

@@ -5,7 +5,7 @@ namespace E_Commerce.Web.ViewModels
 {
     public class OrderVM
     {
-        public Order Order { get; set; }
+        public Order? Order { get; set; }
         public ApplicationUser User { get; set; }
     }
 }

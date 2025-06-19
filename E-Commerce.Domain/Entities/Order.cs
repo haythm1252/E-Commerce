@@ -1,4 +1,5 @@
-﻿using System;
+﻿using E_Commerce.Domain.Entities.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,9 +14,9 @@ namespace E_Commerce.Domain.Entities
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
         [Required]
         public decimal TotalPrice { get; set; }
-        public bool IsPaid { get; set; }
         public string? PaymentId { get; set; }
         public string UserId { get; set; }
 
