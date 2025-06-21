@@ -6,60 +6,114 @@
     else
         Layout = "_Layout";
 
-    var categoryWithOutThisProduct = Model.Category.Products
-        .Where(p => p.Id != Model.Id).ToList();
+    var categroy = new Category
+            {
+                Id = Model.Category.Id,
+                Name = Model.Category.Name,
+                ImageUrl = Model.Category.ImageUrl,
+                IsTopCategory = Model.Category.IsTopCategory,
+                IsSection = Model.Category.IsSection,
+                Products = Model.Category.Products.Where(p => p.Id != Model.Id).ToList()
+            };
 }
 
-<link rel="stylesheet" href="~/css/styles2.css" />
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/product-details.css" asp-append-version="true" />
-
-
-<body >
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-lg-5 mb-4">
-                <img src="/@Model.ImageUrl" class="img-fluid rounded" alt="Product Image">
-            </div>
-
-            <div class="col-lg-7 mt-4">
-                <h2 class="fw-bold">@Model.Name</h2>
-                <div class="d-flex align-items-center mb-3">
-                    <div class="me-3">
-                        <span class="badge bg-success">@Model.Category.Name</span>
+<div class="container-fluid px-4 py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                        <img src="/@Model.ImageUrl"
+                                class="card-img rounded-4"
+                                alt="@Model.Name"
+                                style="height: 500px; width: 100%; object-fit: contain;"> 
                     </div>
                 </div>
-                <h3 class="fw-bold text-primary mb-4">@Model.Price EGP </h3>
-                <p class="mb-4">@Model.Description</p>
-                @if (!User.IsInRole("Admin"))
-                {
-                    <div class="d-flex align-items-center gap-3 mt-4">
-                        <div class="product-quantity-control d-flex align-items-center">
-                            <button class="quantity-btn rounded-start cartbtn" type="button">
-                                <i class="bi bi-dash"></i>
-                            </button>
-                            <input type="text" class="quantity-input" id="quantity" min="1" max="@Model.Stock" value="1">
-                            <button class="quantity-btn cartbtn" type="button">
-                                <i class="bi bi-plus"></i>
-                            </button>
+
+                <div class="col-lg-6">
+                    <div class="ps-lg-4">
+                        <nav aria-label="breadcrumb" class="mb-4">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted">Home</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a asp-controller="Category" asp-action="Products" asp-route-id="@Model.Category.Id" class="text-decoration-none text-muted">
+                                        @Model.Category.Name
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active text-dark fw-medium" aria-current="page">
+                                    @Model.Name
+                                </li>
+                            </ol>
+                        </nav>
+
+                        <div class="mb-3">
+                            <span class="badge bg-primary bg-gradient px-3 py-2 rounded-pill fs-6 fw-medium">
+                                @Model.Category.Name
+                            </span>
                         </div>
 
-                        <button class="btn cartbtn btn-lg px-4 py-2">
-                            <i class="bi bi-cart-fill me-2"></i> Add to Cart
-                        </button>
+                        <h1 class="display-5 fw-bold text-dark mb-4 lh-sm">
+                            @Model.Name
+                        </h1>
+
+                        <div class="mb-4">
+                            <h2 class="display-6 fw-bold text-primary mb-0 me-2">
+                                @Model.Price EGP
+                            </h2>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="fw-semibold text-dark mb-3">Description</h5>
+                            <div class="card bg-light border-0 rounded-3">
+                                <div class="card-body">
+                                    <p class="mb-0 text-muted lh-lg">
+                                        @Model.Description
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                        <i class="bi bi-shield-check text-success me-2 fs-5"></i>
+                                        <small class="text-muted fw-medium">Quality Assured</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                        <i class="bi bi-truck text-primary me-2 fs-5"></i>
+                                        <small class="text-muted fw-medium">Fast Delivery</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <div class="d-grid gap-3">
+                                <button class="btn cartbtn btn-lg py-3 AddToCart shadow-sm"
+                                        data-id="@Model.Id">
+                                    <i class="bi bi-cart-fill me-3 fs-5"></i>
+                                    <span class="fw-semibold">Add to Cart</span>
+                                </button>
+                            </div>
+                        }
                     </div>
-                }
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <section >
-        <partial name="_Section" model="@categoryWithOutThisProduct" />
-    </section>
-    
-</body>
+<section class="py-5 bg-light">
+    <partial name="_Section" model="@categroy" />
+</section>
+
 @section Scripts {
-    <script src="~/js/product-details.js" asp-append-version="true"></script>
     <script src="~/js/AddToCart.js" asp-append-version="true"></script>
     <script src="~/js/slider.js" asp-append-version="true"></script>
 }
