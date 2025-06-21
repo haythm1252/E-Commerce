@@ -12,14 +12,14 @@ namespace E_Commerce.Web.Controllers
         {
             _orderService = orderService;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int pageNumber = 1,int pageSize = 10)
         {
-            var orders = await _orderService.GetFilterdOrders(OrdersFilters.All.ToString());
+            var orders =  _orderService.GetFilterdOrders(OrdersFilters.All.ToString(), pageNumber,  pageSize);
             return View(orders);
         }
-        public async Task<IActionResult> OrderTable(string filter)
+        public IActionResult OrderTable(string filter, int pageNumber = 1, int pageSize = 10)
         {
-            var orders = await _orderService.GetFilterdOrders(filter);
+            var orders = _orderService.GetFilterdOrders(filter, pageNumber, pageSize);
             return PartialView("_OrderTable",orders);
         }
         public async Task<IActionResult> Search (int id)

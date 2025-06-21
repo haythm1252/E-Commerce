@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product>
+﻿@model PagedResult<Product>
 @{
     ViewData["Title"] = "Products";
     Layout = "_DashboardLayout";
@@ -43,9 +43,9 @@
                             </div>
                         </div>
                     </div>
-                   <div id="ProductTable">
-						<partial name="_ProductTable" model="@Model" />
-                   </div>
+                    <div id="ProductTable">
+                        <partial name="_ProductTable" model="@Model" />
+                    </div>
                 </div>
             </div>
         </div>

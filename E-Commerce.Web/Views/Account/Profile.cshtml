@@ -102,10 +102,65 @@
 				<div class="card-body">
 					@if (Model.Orders != null && Model.Orders.Any())
 					{
-							<div class="p-0">
-								<partial name="_OrderTable" model="@Model.Orders" />
+						<div class="container mt-5 mb-5 ">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover align-middle text-center">
+									<thead class="table-dark">
+										<tr>
+											<th>ID</th>
+											<th>Payment ID</th>
+											<th>User Name</th>
+											<th>User Email</th>
+											<th>Order Date</th>
+											<th>Total Price</th>
+											<th>Status</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach (var vm in Model.Orders)
+										{
+											string rowClass = vm.Order.Status switch
+											{
+												OrderStatus.Pending => "table-warning",
+												OrderStatus.Faild => "table-danger",
+												OrderStatus.Success => "table-success",
+												_ => ""
+											};
+											<tr class="@rowClass">
+												<td>@vm.Order.Id</td>
+												<td>@vm.Order.PaymentId</td>
+												<td>@vm.User.FirstName</td>
+												<td>@vm.User.Email</td>
+												<td>@vm.Order.CreatedAt.ToString("dd/MM/yyyy")</td>
+												<td>@vm.Order.TotalPrice.ToString("F2") EGP</td>
+												<td>
+													@if (vm.Order.Status == OrderStatus.Pending)
+													{
+														<span class="badge bg-warning">Pending</span>
+													}
+													else if (vm.Order.Status == OrderStatus.Success)
+													{
+														<span class="badge bg-success">Completed</span>
+													}
+													else if (vm.Order.Status == OrderStatus.Faild)
+													{
+														<span class="badge bg-danger">Cancelled</span>
+													}
+												</td>
+												<td>
+													<a asp-controller="Order" asp-action="Details" asp-route-id="@vm.Order.Id"
+														class="btn btn-dark" title="View Order Details">
+														Details
+													</a>
+												</td>
+											</tr>
+										}
+									</tbody>
+								</table>
 							</div>
-					}
+						</div>
+						}
 					else
 					{
 						<div class="text-center py-5">

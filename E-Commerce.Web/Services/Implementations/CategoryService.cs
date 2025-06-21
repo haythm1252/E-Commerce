@@ -111,5 +111,15 @@ namespace E_Commerce.Web.Services.Implementations
             return false;
 
         }
+
+        public async Task<PagedResult<Product>> GetProducts(int id, int pageNumber,int pageSize)
+        {
+            return await _unitOfWork.Products.GetPagedAsync(
+                pageNumber,
+                pageSize,
+                p => p.CategoryId == id,
+                p => p.Category
+            );
+        }
     }
 }

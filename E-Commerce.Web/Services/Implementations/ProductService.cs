@@ -116,12 +116,14 @@ namespace E_Commerce.Web.Services.Implementations
             return false;
         }
 
-        public async Task<List<Product>> SearchById(int id)
+        public async Task<PagedResult<Product>> SearchById(int id)
         {
-            var product = await _unitOfWork.Products.FindAsync(p => p.Id == id,p => p.Category);
-            if (product == null)
-                return new List<Product>();
-            return new List<Product> { product };
+            return await _unitOfWork.Products.GetPagedAsync(1, 1, p => p.Id == id, p => p.Category);
+        }
+
+        public async Task<PagedResult<Product>> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<Product, bool>>? criteria = null, params Expression<Func<Product, object>>[] includes)
+        {
+            return await _unitOfWork.Products.GetPagedAsync(pageNumber, pageSize, criteria, includes);
         }
     }
 }

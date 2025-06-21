@@ -1,4 +1,5 @@
-﻿using System;
+﻿using E_Commerce.Application.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,6 +16,6 @@ namespace E_Commerce.Application.Interfaces.Repositories
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
-
+        Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? criteria = null, params Expression<Func<T, object>>[] includes);
     }
 }

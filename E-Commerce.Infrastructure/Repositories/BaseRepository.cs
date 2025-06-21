@@ -1,4 +1,6 @@
 ﻿
+using E_Commerce.Application.Common;
+
 namespace E_Commerce.Infrastructure.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
@@ -54,6 +56,27 @@ namespace E_Commerce.Infrastructure.Repositories
         public void Delete(T entity)
         {
             _dbset.Remove(entity);
+        }
+
+        public async Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? criteria = null, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _dbset;
+            if (criteria != null)
+                query = query.Where(criteria);
+            if (includes != null)
+                foreach (var include in includes)
+                    query = query.Include(include);
+
+            var totalCount = await query.CountAsync();
+            return new PagedResult<T>
+            {
+                Items = await query.Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync(),
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }

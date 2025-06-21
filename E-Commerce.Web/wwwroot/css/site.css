@@ -45,7 +45,17 @@ body {
     align-items: center;
     justify-content: center;
 }
+.hover-shadow {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1); 
+    box-shadow: none; 
+}
 
+    .hover-shadow:hover {
+        transform: scale(1.06); 
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.25) !important; 
+        z-index: 2; 
+    }
     .cartbtn:hover {
         color: #f8f9fa !important;
         background-color: #014886;
@@ -60,4 +70,12 @@ input.input-validation-error {
         color: red;
     }
 
+/*this for the slider*/
+.slider-wrapper {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
 
+    .slider-wrapper::-webkit-scrollbar {
+        display: none;
+    }

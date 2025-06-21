@@ -1,4 +1,4 @@
-﻿@model List<OrderVM>
+﻿@model PagedResult<OrderVM>
 @{
     ViewData["Title"] = "Orders";
     Layout = "_DashboardLayout";
@@ -132,15 +132,22 @@
             this.value = this.value.replace(/[^0-9]/g, '');
         });
 
+
+        var selectedFilter = 'All';
+
         $(document).ready(function () {
             $('.filter-btn').on('click', function () {
                 $('.filter-btn').removeClass('active');
                 $(this).addClass('active');
-                var selectedFilter = $(this).data('filter');
+                selectedFilter = $(this).data('filter');
                 $('#ordersTable').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
                 $.ajax({
                     url: '@Url.Action("OrderTable", "Order")',
-                    data: { filter: selectedFilter },
+                    data: { 
+                        filter: selectedFilter,
+                        pageNumber: 1,
+                        pageSize: 10
+                    },
                     success: function (result) {
                         $('#ordersTable').html(result);
                     },
@@ -150,5 +157,26 @@
                 });
             });
         });
+
+         $(document).on('click', '.pagination-link', function (e) {
+                e.preventDefault();
+
+                var page = $(this).data('page');
+                var pageSize = $(this).data('pagesize');
+
+                $('#ordersTable').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+                $.ajax({
+                    url: '@Url.Action("OrderTable", "Order")',
+                    data: { filter: selectedFilter, pageNumber: page, pageSize: pageSize },
+                    success: function (result) {
+                        $('#ordersTable').html(result);
+                    },
+                    error: function () {
+                        $('#ordersTable').html('<div class="alert alert-danger m-3"><i class="bi bi-exclamation-triangle me-2"></i>Something went wrong. Please try again.</div>');
+                    }
+                });
+            });
+
     </script>
 }

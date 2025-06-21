@@ -1,4 +1,5 @@
-﻿using E_Commerce.Application.Interfaces.Repositories;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Application.Interfaces.Repositories;
 using E_Commerce.Domain.Entities;
 using E_Commerce.Domain.Entities.Enums;
 using E_Commerce.Infrastructure.Identity;
@@ -7,6 +8,7 @@ using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace E_Commerce.Web.Services.Implementations
@@ -115,18 +117,20 @@ namespace E_Commerce.Web.Services.Implementations
             return orderVMs;
         }
 
-        public async Task<List<OrderVM>> GetFilterdOrders(string filter)
+        public PagedResult<OrderVM> GetFilterdOrders(string filter,int pageNumber,int pageSize)
         {
-            var orders = await _unitOfWork.Orders.GetAllAsync();
-            var filteredOrders = orders.Where(o => o.Status.ToString() == filter || filter == OrdersFilters.All.ToString()).ToList(); // fillter = all or pending or success or faild
+            var filteredOrders = _unitOfWork.Orders.FilterdOrders(filter);
+            var totalOrders = filteredOrders.Count();
+            var orders = filteredOrders.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-            if(filter == OrdersFilters.Today.ToString()) 
-                filteredOrders = orders.Where(o => o.CreatedAt.Date == DateTime.Today).ToList();
-            if(filter == OrdersFilters.Last30Days.ToString())
-                filteredOrders = orders.Where(o => o.CreatedAt >= DateTime.Today.AddDays(-30)).ToList();
-
-            var orderVMs = GetOrderVMsAsync(filteredOrders);
-            return orderVMs;
+            var orderVMs = GetOrderVMsAsync(orders);
+            return new PagedResult<OrderVM>
+            {
+                Items = orderVMs,
+                TotalCount = totalOrders,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<OrderVM> GetOrderDetails(int id)
@@ -183,17 +187,20 @@ namespace E_Commerce.Web.Services.Implementations
 
             return (successCount, faildCount);
         }
-
-        // i made it return list cuz i dont want to make another partial view that has model only one order vm so i used the same partial view that 
-        // display the list of ordervm
-        public async Task<List<OrderVM>> SearchById(int id)
+        public async Task<PagedResult<OrderVM>> SearchById(int id)
         {
             var order = await _unitOfWork.Orders.GetByIdAsync(id);
             if (order == null)
-                return new List<OrderVM>();
+                return new PagedResult<OrderVM>();
             var vm = await GetOrderVMAsync(order);
 
-            return new List<OrderVM> { vm };
+            return new PagedResult<OrderVM>
+            {
+                Items = new List<OrderVM> { vm },
+                TotalCount = 1,
+                PageNumber = 1,
+                PageSize = 1
+            };
         }
 
         public async Task<UserDetailsVM> GetUserWithOrders(string userId)
@@ -208,5 +215,6 @@ namespace E_Commerce.Web.Services.Implementations
             var orderVMs = orders.Select(order => new OrderVM { User = user, Order = order }).ToList();
             return new UserDetailsVM { User = user, Orders = orderVMs };
         }
+
     }
 }

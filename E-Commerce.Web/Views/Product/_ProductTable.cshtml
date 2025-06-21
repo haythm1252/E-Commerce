@@ -1,5 +1,8 @@
-﻿@model List<Product>
-@if (Model != null && Model.Any())
+﻿@model PagedResult<Product>
+@{
+    int numberOfPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+}
+@if (Model.Items != null && Model.Items.Any())
 {
     <div class="table-responsive">
         <table class="table table-hover align-middle">
@@ -16,7 +19,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var product in Model)
+                @foreach (var product in Model.Items)
                 {
                     <tr>
                         <td class="text-center fw-bold">#@product.Id</td>
@@ -77,6 +80,19 @@
             </tbody>
         </table>
     </div>
+    @if (numberOfPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= numberOfPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 }
 else
 {

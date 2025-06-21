@@ -13,19 +13,19 @@ namespace E_Commerce.Web.Controllers
             _productService = productService;
             _categoryService = categoryService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
-            var products = await _productService.GetAllAsync(null, p => p.Category);
+            var products = await _productService.GetPagedAsync(pageNumber, pageSize, null, p => p.Category);
             return View(products);
         }
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.Details(id);
 
-            if (product == null) 
+            if (product == null)
                 return View("NotFound");
 
-            return View(product); 
+            return View(product);
         }
 
         [HttpGet]
@@ -87,6 +87,24 @@ namespace E_Commerce.Web.Controllers
         {
             var model = await _productService.SearchById(id);
             return PartialView("_ProductTable", model);
+        }
+        public async Task<IActionResult> Search(string query, int pageNumber = 1, int pageSize = 10)
+        {
+            var products = await _productService.GetPagedAsync(
+                pageNumber,
+                pageSize,
+                p =>  p.Name.Contains(query) || p.Description.Contains(query),
+                p => p.Category
+            );
+            var categories = await _categoryService.GetSelectList();
+
+            var model = new SearchVM
+            {
+                Products = products,
+                Categories = categories,
+                query = query
+            };
+            return View(model);
         }
     }
 }

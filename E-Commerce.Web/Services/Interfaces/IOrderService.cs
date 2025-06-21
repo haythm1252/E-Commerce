@@ -1,14 +1,14 @@
-﻿using E_Commerce.Domain.Entities;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Domain.Entities;
 using E_Commerce.Web.ViewModels;
+using System.Linq.Expressions;
 
 namespace E_Commerce.Web.Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<List<OrderVM>> GetFilterdOrders(string filter);
-        // i made it return list cuz i dont want to make another partial view that has model only one order vm so i used the same partial view that 
-        // display the list of ordervm
-        Task<List<OrderVM>> SearchById(int id);
+        PagedResult<OrderVM> GetFilterdOrders(string filter, int pageNumber, int pageSize);
+        Task<PagedResult<OrderVM>> SearchById(int id);
         Task<UserDetailsVM> GetUserWithOrders(string userId);
         Task<OrderVM> GetOrderDetails(int id);
         Task<Order> CreateOrderAsync(int cartId);
