@@ -87,7 +87,7 @@
                 @for (int i = 1; i <= numberOfPages; i++)
                 {
                     <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                        <a href="#" class="page-link pagination-link" data-pagenumber="@i" data-pagesize="@Model.PageSize">@i</a>
                     </li>
                 }
             </ul>

@@ -1,6 +1,9 @@
-﻿@model List<ApplicationUser>
+﻿@model PagedResult<ApplicationUser>
+@{
+    int numberOfPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+}
 <div class="container mt-5 mb-5 ">
-    @if (Model != null && Model.Any())
+    @if (Model != null && Model.Items.Any())
     {
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle text-center">
@@ -15,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Model)
+                    @foreach (var user in Model.Items)
                     {
                         <tr>
                             <td>@user.FirstName @user.LastName</td>
@@ -34,6 +37,19 @@
                 </tbody>
             </table>
         </div>
+        @if (numberOfPages > 1)
+        {
+            <nav>
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= numberOfPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a  class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
     }
     else
     {

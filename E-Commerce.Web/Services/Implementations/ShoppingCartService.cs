@@ -58,7 +58,7 @@ namespace E_Commerce.Web.Services.Implementations
             var cart = await GetCart();
             var product = await _productService.GetByIdAsync(id);
 
-            if (product == null || cart == null)
+            if (product == null || cart == null || product.Stock < 1)
                 return false;
 
             

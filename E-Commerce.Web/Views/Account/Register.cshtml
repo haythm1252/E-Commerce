@@ -1,95 +1,129 @@
-﻿@model RegisterVM 
+﻿@model RegisterVM
 @{
     ViewData["Title"] = "Register";
     Layout = null;
 }
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Static Navigation - SB Admin</title>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register - E-commerce</title>
 
-        <link href="~/css/styles2.css" rel="stylesheet" />
-        <link rel="stylesheet" href="~/bootstrap-icons/font/bootstrap-icons.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    </head>
-<body style="background-color:#0e5aa7;">
-        <main>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-7">
-                        <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Create Account</h3></div>
-                            <div class="card-body">
-                                <form asp-controller="Account" method="post" >
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3 mb-md-0">
-                                            <input class="form-control" type="text" asp-for="FirstName" />
-                                            <label asp-for="FirstName"></label>
-											<span asp-validation-for="FirstName" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                            <input class="form-control" type="text" asp-for="LastName" />
-                                            <label asp-for="LastName"></label>
-											<span asp-validation-for="LastName" class="text-danger"></span>
-                                            </div>
-                                        </div>
+    <link href="~/css/styles2.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/bootstrap-icons/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0e5aa7 0%, #3c8dbc 100%);
+            min-height: 100vh;
+        }
+
+        .card {
+            border-radius: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #0e5aa7;
+            border-color: #0e5aa7;
+        }
+
+            .btn-primary:hover {
+                background-color: #094a88;
+                border-color: #094a88;
+            }
+
+        .form-floating > label {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+            <div class="col-lg-7">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-white text-center">
+                        <h3 class="fw-bold mb-0 text-primary">Create Account</h3>
+                    </div>
+                    <div class="card-body px-4 py-4">
+                        <form asp-controller="Account" method="post">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <input class="form-control" asp-for="FirstName" />
+                                        <label asp-for="FirstName"></label>
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
                                     </div>
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" type="text" asp-for="PhoneNumber" />
-                                        <label asp-for="PhoneNumber"></label>
-                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input class="form-control" asp-for="LastName" />
+                                        <label asp-for="LastName"></label>
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
                                     </div>
-								    <div class="form-floating mb-3">
-									    <input class="form-control" type="text" asp-for="Address" />
-									    <label asp-for="Address"></label>
-									    <span asp-validation-for="Address" class="text-danger"></span>
-								    </div>
-                                    <div class="form-floating mb-3">
-                                        <input class="form-control" type="email" asp-for="Email" />
-                                        <label asp-for="Email"></label>
-                                        <span asp-validation-for="Email" class="text-danger"></span>
-                                    </div>
-                                    <div class="row mb-3">
-									    <div class="col-md-6">
-										    <div class="form-floating mb-3 mb-md-0">
-											    <input class="form-control" type="password" asp-for="Password" />
-											    <label asp-for="Password"></label>
-											    <span asp-validation-for="Password" class="text-danger"></span>
-										    </div>
-									    </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating mb-3 mb-md-0">
-                                            <input class="form-control" type="password" asp-for="ConfirmPassword" />
-                                            <label asp-for="ConfirmPassword"></label>
-                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4 mb-0">
-                                    <div class="d-grid"><button class="btn btn-primary btn-block" type="submit" style="background-color:#0e5aa7;">Create Account</button></div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
-                            <div class="card-footer text-center py-3">
-                            <div class="small"><a class="text-decoration-none " style="color:#0e5aa7;" asp-controller="Account" asp-action="Login">Have an account? Go to login</a></div>
+
+                            <div class="form-floating mb-3">
+                                <input class="form-control" asp-for="PhoneNumber" />
+                                <label asp-for="PhoneNumber"></label>
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                             </div>
+
+                            <div class="form-floating mb-3">
+                                <input class="form-control" asp-for="Address" />
+                                <label asp-for="Address"></label>
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="email" asp-for="Email" />
+                                <label asp-for="Email"></label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <input class="form-control" type="password" asp-for="Password" />
+                                        <label asp-for="Password"></label>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3 mb-md-0">
+                                        <input class="form-control" type="password" asp-for="ConfirmPassword" />
+                                        <label asp-for="ConfirmPassword"></label>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 mb-0">
+                                <div class="d-grid">
+                                    <button class="btn btn-primary btn-block" type="submit">Create Account</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card-footer text-center bg-white py-3">
+                        <div class="small">
+                            <a class="text-decoration-none fw-semibold" asp-controller="Account" asp-action="Login">
+                                Have an account? Go to login
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </main>
 
-	    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 
-    </body>
-<</html>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

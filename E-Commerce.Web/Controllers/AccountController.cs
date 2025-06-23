@@ -1,6 +1,8 @@
-﻿using E_Commerce.Infrastructure.Identity;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Infrastructure.Identity;
 using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -21,14 +23,18 @@ namespace E_Commerce.Web.Controllers
             _roleManager = roleManager;
             _orderService = orderService;
         }
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Index(int pageNumber = 1,int pageSize = 10)
         {
-            var users = await _userManager.GetUsersInRoleAsync("Customer");
-            return View(users);
+            //that is very bad way for performance because i am loading all the users at onece i will handel it in another time
+            var AllUsers = await _userManager.GetUsersInRoleAsync("Customer");
+            var users = AllUsers.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var model = new PagedResult<ApplicationUser> { Items = users, TotalCount = AllUsers.Count(), PageNumber = pageNumber, PageSize = pageSize };
+            return View(model);
         }
-        public async Task<IActionResult> Profile(string email)
+        public async Task<IActionResult> Profile()
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.GetUserAsync(User);
             var userDetailsVM = await _orderService.GetUserWithOrders(user!.Id);
             if (userDetailsVM == null)
                 return NotFound();
@@ -142,11 +148,76 @@ namespace E_Commerce.Web.Controllers
             return RedirectToAction("Index", "Home");
 
         }
-
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit ()
+        {
+            //var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+            return View(user);
+        }
+        [HttpPost]
+        [ActionName("Edit")]
+        public async Task<IActionResult> SaveEdit(ApplicationUser model)
+        {
+            if (!ModelState.IsValid)
+                return View("Edit", model);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            user.UserName = model.Email;
+            user.Email = model.Email;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Address = model.Address;
+            user.PhoneNumber = model.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View("Edit", model);
+            }
+
+            TempData["SuccessMessage"] = "Profile updated successfully!";
+            return RedirectToAction("Profile");
+        }
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM model)
+        {
+            if (!ModelState.IsValid)
+                return View("ResetPassword", model);
+            if (model.NewPassword == model.OldPassword)
+            {
+                ModelState.AddModelError("NewPassword", "The new password must be different from the old password.");
+                return View("ResetPassword", model);
+            }
+            var user = await _userManager.GetUserAsync(User);
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View("ResetPassword", model);
+            }
+
+            TempData["SuccessMessage"] = "Password changed successfully!";
+            return RedirectToAction("Profile");
         }
     }
 }

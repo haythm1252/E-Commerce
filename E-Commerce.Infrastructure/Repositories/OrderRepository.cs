@@ -43,6 +43,11 @@ namespace E_Commerce.Infrastructure.Repositories
 
             return query;
         }
-    
+
+        public IQueryable<Order> FilterdOrders(Expression<Func<Order, bool>> criteria)
+        {
+            IQueryable<Order> query = _context.Orders.Where(criteria);
+            return query;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿@model HomeVM
 @{
     ViewData["Title"] = "Home Page";
+    //made this to use the same partial view
+    var bestSellerCategory = new Category { Products = Model.Products.ToList(), Name = "Best Selling Products" };
 }
 
 
@@ -38,6 +40,7 @@
         </div>
     </div>
 
+    <partial name="_Section" model="@bestSellerCategory" />
     <!-- Product Sections -->
     @foreach (var category in Model.Categories.Where(c => c.IsSection))
     {

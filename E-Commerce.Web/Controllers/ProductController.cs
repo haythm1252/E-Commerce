@@ -18,6 +18,11 @@ namespace E_Commerce.Web.Controllers
             var products = await _productService.GetPagedAsync(pageNumber, pageSize, null, p => p.Category);
             return View(products);
         }
+        public async Task<IActionResult> ProductTable(int pageNumber, int pageSize)
+        {
+            var products = await _productService.GetPagedAsync(pageNumber, pageSize, null, p => p.Category);
+            return PartialView("_ProductTable", products);
+        }
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.Details(id);
@@ -62,6 +67,7 @@ namespace E_Commerce.Web.Controllers
                 CategoryId = product.CategoryId,
                 Stock = product.Stock,
                 CurrentImage = product.ImageUrl,
+                BestSeller = product.BestSeller,
                 Categories = await _categoryService.GetSelectList()
             };
             return View(model);
@@ -88,7 +94,7 @@ namespace E_Commerce.Web.Controllers
             var model = await _productService.SearchById(id);
             return PartialView("_ProductTable", model);
         }
-        public async Task<IActionResult> Search(string query, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Search(string query, int pageNumber = 1, int pageSize = 12)
         {
             var products = await _productService.GetPagedAsync(
                 pageNumber,

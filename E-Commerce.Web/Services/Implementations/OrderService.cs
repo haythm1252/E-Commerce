@@ -30,6 +30,13 @@ namespace E_Commerce.Web.Services.Implementations
             _userManager = userManager;
         }
 
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync(Expression<Func<Order,bool>>? critere=null,params Expression<Func<Order, object>>[] includes)
+        {
+            var orders = await _unitOfWork.Orders.GetAllAsync(critere,includes);
+            if (orders == null || !orders.Any())
+                return new List<Order>();
+            return orders;
+        }
         public async Task<Order> CreateOrderAsync(int cartId)
         {
             var cart = await _unitOfWork.ShoppingCarts.FindAsync(c => c.Id == cartId, c => c.ShoppingCartItems);
@@ -98,7 +105,7 @@ namespace E_Commerce.Web.Services.Implementations
             return orderVM;
         }
 
-        public List<OrderVM> GetOrderVMsAsync(List<Order> orders)
+        public List<OrderVM> GetOrderVMs(List<Order> orders)
         {
             var userIds = orders.Select(o => o.UserId).Distinct().ToList();
             var users =  _userManager.Users.Where(u => userIds.Contains(u.Id)).ToList();
@@ -117,13 +124,28 @@ namespace E_Commerce.Web.Services.Implementations
             return orderVMs;
         }
 
+        public PagedResult<OrderVM> GetFilterdOrders(Expression<Func<Order, bool>> criteria, int pageNumber, int pageSize)
+        {
+            var filteredOrders = _unitOfWork.Orders.FilterdOrders(criteria);
+            var totalOrders = filteredOrders.Count();
+            var orders = filteredOrders.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+
+            var orderVMs = GetOrderVMs(orders);
+            return new PagedResult<OrderVM>
+            {
+                Items = orderVMs,
+                TotalCount = totalOrders,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
         public PagedResult<OrderVM> GetFilterdOrders(string filter,int pageNumber,int pageSize)
         {
             var filteredOrders = _unitOfWork.Orders.FilterdOrders(filter);
             var totalOrders = filteredOrders.Count();
             var orders = filteredOrders.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-            var orderVMs = GetOrderVMsAsync(orders);
+            var orderVMs = GetOrderVMs(orders);
             return new PagedResult<OrderVM>
             {
                 Items = orderVMs,
@@ -215,6 +237,7 @@ namespace E_Commerce.Web.Services.Implementations
             var orderVMs = orders.Select(order => new OrderVM { User = user, Order = order }).ToList();
             return new UserDetailsVM { User = user, Orders = orderVMs };
         }
+
 
     }
 }

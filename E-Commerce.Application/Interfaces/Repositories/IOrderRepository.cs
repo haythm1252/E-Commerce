@@ -14,6 +14,7 @@ namespace E_Commerce.Application.Interfaces.Repositories
         Task<Order> GetOrderWithProducts(int id);
         Task<List<Order>> GetAllOrderWithProducts(Expression<Func<Order, bool>> criteria);
         IQueryable<Order> FilterdOrders(string filter);
+        IQueryable<Order> FilterdOrders(Expression<Func<Order, bool>> criteria);
     }
 
 }

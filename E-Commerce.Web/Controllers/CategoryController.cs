@@ -75,7 +75,7 @@ namespace E_Commerce.Web.Controllers
             return result ? Ok() : BadRequest();
         }
 
-        public async Task<IActionResult> Products(int id, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Products(int id, int pageNumber = 1, int pageSize = 12)
         {
             var pagedResult = await _CategoryService.GetProducts(id, pageNumber, pageSize);
             var model = new SearchVM

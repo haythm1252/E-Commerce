@@ -1,5 +1,201 @@
-﻿@{
-	Layout = "_DashboardLayout";
+﻿@model AdminDashboardVM
+@{
+    Layout = "_DashboardLayout";
 }
 
-<h1>Admin Dashboard</h1>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between bg-gradient bg-primary text-white p-4 rounded-3 shadow">
+                <div>
+                    <h1 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-speedometer2 me-3"></i>Admin Dashboard
+                    </h1>
+                    <p class="lead mb-0 opacity-75">Monitor your business performance</p>
+                </div>
+                <div class="text-end">
+                    <div class="badge bg-light text-primary fs-6 px-3 py-2">
+                        <i class="bi bi-calendar-today me-1"></i>
+                        @DateTime.Now.ToString("MMM dd, yyyy")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-primary mb-2">
+                                <i class="bi bi-cash-coin fs-1"></i>
+                            </div>
+                            <h6 class="text-muted text-uppercase fw-semibold mb-2 small">Today's Sales</h6>
+                            <h2 class="fw-bold text-dark mb-1">@Model.TotalSalesToday.ToString("F2")</h2>
+                            <small class="text-muted">EGP</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                <i class="bi bi-calendar3 me-1"></i>Today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-primary mb-2">
+                                <i class="bi bi-cash-coin fs-1"></i>
+                            </div>
+                            <h6 class="text-muted text-uppercase fw-semibold mb-2 small">Last 30 Days Sales</h6>
+                            <h2 class="fw-bold text-dark mb-1">@Model.TotalSalesLast30Days.ToString("F2")</h2>
+                            <small class="text-muted">EGP</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                <i class="bi bi-calendar3 me-1"></i>30 Days
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-primary mb-2">
+                                <i class="bi bi-bag-check fs-1"></i>
+                            </div>
+                            <h6 class="text-muted text-uppercase fw-semibold mb-2 small">Today's Orders</h6>
+                            <h2 class="fw-bold text-dark mb-1">@Model.TodayOrders.TotalCount</h2>
+                            <small class="text-muted">Orders</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                <i class="bi bi-calendar3 me-1"></i>Today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-lg-6 col-md-6">
+            <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-primary mb-2">
+                                <i class="bi bi-bag-check fs-1"></i>
+                            </div>
+                            <h6 class="text-muted text-uppercase fw-semibold mb-2 small">Monthly Orders</h6>
+                            <h2 class="fw-bold text-dark mb-1">@Model.Last30DaysOrders.TotalCount</h2>
+                            <small class="text-muted">Orders</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                                <i class="bi bi-calendar3 me-1"></i>30 Days
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient bg-primary text-white border-0 py-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="mb-1 fw-bold">Today's Orders</h4>
+                            <p class="mb-0 opacity-75">Recent orders from today</p>
+                        </div>
+                        <div class="badge bg-light text-primary fs-6 px-3 py-2">
+                            <i class="bi bi-list-ol me-1"></i>
+                            @Model.TodayOrders.TotalCount Orders
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0" id="TodayOrders">
+                    <partial name="_TodayOrders" model="@Model.TodayOrders" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient bg-primary text-white border-0 py-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4 class="mb-1 fw-bold">Orders - Last 30 Days</h4>
+                            <p class="mb-0 opacity-75">Complete order history for the past month</p>
+                        </div>
+                        <div class="badge bg-light text-primary fs-6 px-3 py-2">
+                            <i class="bi bi-list-ol me-1"></i>
+                            @Model.Last30DaysOrders.TotalCount Orders
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0" id="Last30DayOrders">
+                    <partial name="_Last30DaysOrders" model="@Model.Last30DaysOrders" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.pagination-link', function (e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            var pageSize = $(this).data('pagesize');
+            var action = $(this).data('action');
+
+
+            $(`#${action}`).html(`
+                <div class="text-center p-5">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h6 class="text-primary fw-semibold">Loading orders...</h6>
+                    </div>
+                </div>
+            `);
+
+            $.ajax({
+                url: `/Admin/${action}`,
+                data: { pageNumber: page, pageSize: pageSize },
+                success: function (result) {
+                    $(`#${action}`).html(result);
+                },
+                error: function () {
+                    $(`#${action}`).html(`
+                        <div class="alert alert-primary border-0 shadow-sm m-4">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-primary"></i>
+                                <div>
+                                    <h6 class="alert-heading mb-1 text-primary">Oops! Something went wrong</h6>
+                                    <p class="mb-0 text-primary">Unable to load orders. Please try again.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+        });
+    </script>
+}

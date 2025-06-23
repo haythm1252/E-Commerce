@@ -7,7 +7,9 @@ namespace E_Commerce.Web.Services.Interfaces
 {
     public interface IOrderService
     {
+        Task<IEnumerable<Order>> GetAllOrdersAsync(Expression<Func<Order, bool>>? critere = null, params Expression<Func<Order, object>>[] includes);
         PagedResult<OrderVM> GetFilterdOrders(string filter, int pageNumber, int pageSize);
+        PagedResult<OrderVM> GetFilterdOrders(Expression<Func<Order, bool>> criteria, int pageNumber, int pageSize);
         Task<PagedResult<OrderVM>> SearchById(int id);
         Task<UserDetailsVM> GetUserWithOrders(string userId);
         Task<OrderVM> GetOrderDetails(int id);

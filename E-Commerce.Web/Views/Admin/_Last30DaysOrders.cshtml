@@ -4,13 +4,6 @@
     int numberOfPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
 }
 <div class="container mt-5 mb-5 ">
-    <div class="card bg-light border-0 rounded-3">
-        <div class="card-body">
-            <p class="mb-0 text-muted lh-lg">
-                Number Of Orders: @Model.TotalCount
-            </p>
-        </div>
-    </div>
     @if (Model.Items != null && Model.Items.Any())
     {
         <div class="table-responsive">
@@ -30,14 +23,7 @@
                 <tbody>
                     @foreach (var vm in Model.Items)
                     {
-                        string rowClass = vm.Order.Status switch
-                        {
-                            OrderStatus.Pending => "table-warning",
-                            OrderStatus.Faild => "table-danger",
-                            OrderStatus.Success => "table-success",
-                            _ => ""
-                        };
-                        <tr class="@rowClass">
+                        <tr class="table-success">
                             <td>@vm.Order.Id</td>
                             <td>@vm.Order.PaymentId</td>
                             <td>@vm.User.FirstName</td>
@@ -61,7 +47,7 @@
                             <td>
                                 <a asp-controller="Order" asp-action="Details" asp-route-id="@vm.Order.Id"
                                    class="btn btn-dark" title="View Order Details">
-                                     Details
+                                    Details
                                 </a>
                             </td>
                         </tr>
@@ -77,7 +63,7 @@
                     {
                         <li class="page-item @(i == Model.PageNumber ? "active" : "")">
                             <a href="#" class="page-link pagination-link"
-                               data-page="@i" data-pagesize="@Model.PageSize">@i</a>
+                               data-action="Last30DayOrders" data-page="@i" data-pagesize="@Model.PageSize">@i</a>
                         </li>
                     }
                 </ul>
@@ -87,7 +73,7 @@
     else
     {
         <div class="alert alert-info text-center mb-5">
-            <p>No Orders found.</p>
+            <p>No Orders had made Last 30 days.</p>
         </div>
     }
 </div>
