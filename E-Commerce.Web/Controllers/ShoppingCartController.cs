@@ -1,10 +1,13 @@
-﻿using E_Commerce.Domain.Entities;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Domain.Entities;
 using E_Commerce.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace E_Commerce.Web.Controllers
 {
+    
     public class ShoppingCartController : Controller
     {
         private readonly IShoppingCartService _shoppingCartService;
@@ -25,6 +28,7 @@ namespace E_Commerce.Web.Controllers
         {
             return await _shoppingCartService.RemoveFromCartAsync(Id) ? Ok() : BadRequest("Failed to add item to cart.");
         }
+        [Authorize(Roles = Roles.Customer)]
         public async Task<IActionResult> Checkout (int cartId)
         {
             var cart = await _shoppingCartService.GetCartWithProduct(cartId);

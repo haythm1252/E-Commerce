@@ -66,13 +66,16 @@
                         </div>
                     </a>
 
-                    <div class="p-3 pt-0">
-                        <button class="btn cartbtn w-100 AddToCart"
-                                data-id="@product.Id">
-                            <i class="bi bi-cart-fill me-2"></i>
-                            Add to Cart
-                        </button>
-                    </div>
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <div class="p-3 pt-0">
+                            <button class="btn cartbtn w-100 AddToCart"
+                                    data-id="@product.Id">
+                                <i class="bi bi-cart-fill me-2"></i>
+                                Add to Cart
+                            </button>
+                        </div>
+                    }
                 </div>
             </div>
         }

@@ -1,10 +1,13 @@
-﻿using E_Commerce.Domain.Entities.Enums;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Domain.Entities.Enums;
 using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Web.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class AdminController : Controller
     {
         private readonly IOrderService _orderService;

@@ -1,5 +1,7 @@
-﻿using E_Commerce.Web.Services.Interfaces;
+﻿using E_Commerce.Application.Common;
+using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Web.Controllers
@@ -13,11 +15,13 @@ namespace E_Commerce.Web.Controllers
             _productService = productService;
             _categoryService = categoryService;
         }
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
             var products = await _productService.GetPagedAsync(pageNumber, pageSize, null, p => p.Category);
             return View(products);
         }
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ProductTable(int pageNumber, int pageSize)
         {
             var products = await _productService.GetPagedAsync(pageNumber, pageSize, null, p => p.Category);
@@ -34,6 +38,7 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Create()
         {
             var model = new CreateProductVM { Categories = await _categoryService.GetSelectList() };
@@ -41,6 +46,8 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateProductVM model)
         {
             if (!ModelState.IsValid)
@@ -54,6 +61,7 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -73,6 +81,8 @@ namespace E_Commerce.Web.Controllers
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditProductVM model)
         {
             if (!ModelState.IsValid)
@@ -85,15 +95,20 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = Roles.Admin)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             return await _productService.DeleteAsync(id) ? Ok() : BadRequest();
         }
+
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> SearchById(int id)
         {
             var model = await _productService.SearchById(id);
             return PartialView("_ProductTable", model);
         }
+
         public async Task<IActionResult> Search(string query, int pageNumber = 1, int pageSize = 12)
         {
             var products = await _productService.GetPagedAsync(

@@ -6,68 +6,59 @@
     <title>@ViewData["Title"] - E_Commerce.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-	<link rel="stylesheet" href="~/css/styles.css" />
-	<link rel="stylesheet" href="~/toastr.js/toastr.min.css" />
+    <link rel="stylesheet" href="~/css/styles.css" />
+    <link rel="stylesheet" href="~/toastr.js/toastr.min.css" />
     <link rel="stylesheet" href="~/bootstrap-icons/font/bootstrap-icons.min.css" />
-	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #0e5aa7;">
             <div class="container-fluid py-1">
-                <a class="navbar-brand fw-bold fs-3" asp-controller="Home" asp-action="Index"><i class="bi bi-bag-heart"></i> E-Commerce</a>
+                <a class="navbar-brand fw-bold fs-3 me-5" asp-controller="Home" asp-action="Index"><i class="bi bi-bag-heart"></i> E-Commerce</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" asp-controller="Admin" asp-action="Index">Admain</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                    <form class="d-flex my-2 my-lg-0 me-4" asp-action="Search" asp-controller="Product" method="get">
-                        <div class="input-group rounded-pill overflow-hidden" style="height: 38px; width: 500px;">
-                            <input type="text" class="form-control border-0" name="query" placeholder="Search for products..." />
-                            <button class="btn btn-light border-0" type="submit" style="background-color: #f8f9fa;">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
-
-                    @if (User.Identity!.IsAuthenticated)
+                <form class="d-flex my-2 my-lg-0 me-4 justify-content-center" asp-action="Search" asp-controller="Product" method="get">
+                    <div class="input-group rounded-pill overflow-hidden" style="height: 38px; width: 600px;">
+                        <input type="text" class="form-control border-0" name="query" placeholder="Search for products..." />
+                        <button class="btn btn-light border-0" type="submit" style="background-color: #f8f9fa;">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    @if (User.IsInRole(Roles.Admin))
                     {
-                        <a asp-controller="Account" asp-action="Profile" asp-route-email="@User.Identity.Name" class="btn fs-6 rounded-pill text-white me-2 cartbtn">
-                            <i class="bi bi-person-circle me-2 fs-4"></i>
-                            Hello @User.Identity.Name
-                        </a>
-                        <a class="btn cartbtn fs-6 rounded-pill text-white" asp-controller="Account" asp-action="LogOut">
-                            <i class="bi bi-box-arrow-left me-1 fs-5"></i>
-                            Logout
-                        </a>
-
+                        <div class="nav-item cartbtn"><a class="nav-link active" asp-controller="Admin" asp-action="Index">Admain Dashboard</a></div>
                     }
-                    else
+
+                    @if (!User.IsInRole(Roles.Admin))
                     {
-                        <a class="btn cartbtn fs-6 rounded-pill text-white" asp-controller="Account" asp-action="Login">
-                            <i class="bi bi-person-circle me-2 fs-4"></i>
-                            Login & Register
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <a asp-controller="Account" asp-action="Profile" asp-route-email="@User.Identity.Name" class="btn fs-6 rounded-pill text-white me-2 cartbtn">
+                                <i class="bi bi-person-circle me-2 fs-4"></i>
+                                Hello @User.Identity.Name
+                            </a>
+                            <a class="btn cartbtn fs-6 rounded-pill text-white" asp-controller="Account" asp-action="LogOut">
+                                <i class="bi bi-box-arrow-left me-1 fs-5"></i>
+                                Logout
+                            </a>
+
+                        }
+                        else
+                        {
+                            <a class="btn cartbtn fs-6 rounded-pill text-white" asp-controller="Account" asp-action="Login">
+                                <i class="bi bi-person-circle me-2 fs-4"></i>
+                                Login & Register
+                            </a>
+                        }
+                        <a class="btn cartbtn fs-5 rounded-pill px-3 py-2" asp-controller="ShoppingCart" asp-action="Index">
+                            <i class="bi bi-cart-fill me-1 fs-4"></i>
+                            Cart
                         </a>
                     }
-                    
-                    <a class="btn cartbtn fs-5 rounded-pill px-3 py-2" asp-controller="ShoppingCart" asp-action="Index">
-                        <i class="bi bi-cart-fill me-1 fs-4"></i>
-                        Cart 
-                    </a>
-
-
+                          
                 </div>
             </div>
         </nav>

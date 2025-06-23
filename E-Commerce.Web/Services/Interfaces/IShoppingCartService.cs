@@ -10,5 +10,6 @@ namespace E_Commerce.Web.Services.Interfaces
         Task<ShoppingCart> GetCart();
         Task<IEnumerable<ShoppingCartItem>> GetCartItems();
         Task RemoveAllCartItems(int cartId);
+        Task AsignCartItemsToUser(List<ShoppingCartItem> items);
     }
 }

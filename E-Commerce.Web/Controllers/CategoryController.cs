@@ -3,10 +3,12 @@ using E_Commerce.Domain.Entities;
 using E_Commerce.Web.Helpers;
 using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Web.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _CategoryService;
@@ -69,12 +71,14 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpDelete]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _CategoryService.DeleteAsync(id);
             return result ? Ok() : BadRequest();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Products(int id, int pageNumber = 1, int pageSize = 12)
         {
             var pagedResult = await _CategoryService.GetProducts(id, pageNumber, pageSize);

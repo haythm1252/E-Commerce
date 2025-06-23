@@ -10,6 +10,7 @@ namespace E_Commerce.Application.Common
     {
         public const string CategoryFolderPath = "assets/images/Categories";
         public const string ProductFolderPath = "assets/images/Products";
+        // for validation
         public const string AllowedExtensions = ".jpg,.png,.jpeg";
         public const int MaxFileSizeInMP = 1;
         public const int MaxFileSizeInBytes = MaxFileSizeInMP * 1024 * 1024;

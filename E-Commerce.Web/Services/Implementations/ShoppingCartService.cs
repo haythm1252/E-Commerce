@@ -1,6 +1,9 @@
 ﻿using E_Commerce.Application.Interfaces.Repositories;
 using E_Commerce.Domain.Entities;
+using E_Commerce.Infrastructure.Data;
+using E_Commerce.Infrastructure.Identity;
 using E_Commerce.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace E_Commerce.Web.Services.Implementations
@@ -10,11 +13,14 @@ namespace E_Commerce.Web.Services.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IProductService _productService;
         private readonly IHttpContextAccessor _httpContext;
-        public ShoppingCartService(IUnitOfWork unitOfWork, IProductService productService, ICategoryService categoryService, IHttpContextAccessor httpcontext)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ShoppingCartService(IUnitOfWork unitOfWork, IProductService productService, ICategoryService categoryService, 
+            IHttpContextAccessor httpcontext,UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _productService = productService;
             _httpContext = httpcontext;
+            _userManager = userManager;
         }
         
         public async Task<ShoppingCart> GetCart()
@@ -131,6 +137,13 @@ namespace E_Commerce.Web.Services.Implementations
             var res = await _unitOfWork.SaveChangesAsync();
             if(res==0)
                 throw new ArgumentException("faild to delete cart items");
+        }
+
+        public async Task AsignCartItemsToUser(List<ShoppingCartItem> items)
+        {
+            var cart = await GetCart();
+            cart.ShoppingCartItems = items.ToList();
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

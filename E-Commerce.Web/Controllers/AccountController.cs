@@ -1,4 +1,6 @@
 ﻿using E_Commerce.Application.Common;
+using E_Commerce.Domain.Entities.Enums;
+using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Identity;
 using E_Commerce.Web.Services.Interfaces;
 using E_Commerce.Web.ViewModels;
@@ -15,23 +17,46 @@ namespace E_Commerce.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IOrderService _orderService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly ApplicationDbContext _context;
         public AccountController(UserManager<ApplicationUser> UserManager,SignInManager<ApplicationUser> signInManager, 
-                RoleManager<IdentityRole> roleManager, IOrderService orderService)
+                RoleManager<IdentityRole> roleManager, IOrderService orderService, IShoppingCartService shoppingCartService, ApplicationDbContext context)
         {
             _userManager = UserManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _orderService = orderService;
+            _shoppingCartService = shoppingCartService;
+            _context = context;
         }
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Index(int pageNumber = 1,int pageSize = 10)
+        [Authorize(Roles = Roles.Admin)]
+        public IActionResult Index(int pageNumber = 1,int pageSize = 10)
         {
-            //that is very bad way for performance because i am loading all the users at onece i will handel it in another time
-            var AllUsers = await _userManager.GetUsersInRoleAsync("Customer");
-            var users = AllUsers.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            var model = new PagedResult<ApplicationUser> { Items = users, TotalCount = AllUsers.Count(), PageNumber = pageNumber, PageSize = pageSize };
-            return View(model);
+            var customerId = _context.Roles.Where(r => r.Name == Roles.Customer)
+                .Select(r => r.Id)
+                .FirstOrDefault();
+            var customers = _context.Users.Join(_context.UserRoles, user => user.Id, userRole => userRole.UserId, (user, userRole) => new { user, userRole })
+                .Where(x => x.userRole.RoleId == customerId)
+                .Select(x => x.user)
+                .OrderByDescending(u => u.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var totalCount = _context.Users.Join(_context.UserRoles, user => user.Id, userRole => userRole.UserId, (user, userRole) => new { user, userRole })
+                .Where(x => x.userRole.RoleId == customerId)
+                .Count();
+
+            var model = new PagedResult<ApplicationUser>
+            {
+                Items = customers,
+                TotalCount = totalCount,
+                PageNumber =pageNumber,
+                PageSize = pageSize
+            };
+                return View(model);
         }
+
+        [Authorize(Roles = Roles.Customer)]
         public async Task<IActionResult> Profile()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -41,6 +66,8 @@ namespace E_Commerce.Web.Controllers
 
             return View(userDetailsVM);
         }
+
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Details(string id)
         {
             var userDetailsVM = await _orderService.GetUserWithOrders(id);
@@ -49,6 +76,8 @@ namespace E_Commerce.Web.Controllers
 
             return View(userDetailsVM);
         }
+
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> SearchById(string Email)
         {
             if (string.IsNullOrEmpty(Email))
@@ -70,6 +99,7 @@ namespace E_Commerce.Web.Controllers
 
         [HttpPost]
         [ActionName("Register")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveRegister(RegisterVM model)
         {
             if (!ModelState.IsValid)
@@ -95,7 +125,6 @@ namespace E_Commerce.Web.Controllers
                 CreatedAt = DateTime.Now
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-
             // add user to role
             if (result.Succeeded)
             {
@@ -118,12 +147,14 @@ namespace E_Commerce.Web.Controllers
 
         [HttpPost]
         [ActionName("Login")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveLogin(LoginVM model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
+            var cartitems = await _shoppingCartService.GetCartItems();
             // loging in the user
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe,false);
             if (!result.Succeeded)
@@ -131,6 +162,7 @@ namespace E_Commerce.Web.Controllers
                 ModelState.AddModelError("Email", "Invalid login attempt");
                 return View(model);
             }
+            await _shoppingCartService.AsignCartItemsToUser(cartitems.ToList());
 
             // check the user in which role
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -148,6 +180,8 @@ namespace E_Commerce.Web.Controllers
             return RedirectToAction("Index", "Home");
 
         }
+
+        [Authorize]
         public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
@@ -155,6 +189,7 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.Customer)]
         public async Task<IActionResult> Edit ()
         {
             //var user = await _userManager.FindByIdAsync(id);
@@ -163,8 +198,11 @@ namespace E_Commerce.Web.Controllers
                 return NotFound();
             return View(user);
         }
+
         [HttpPost]
         [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Customer)]
         public async Task<IActionResult> SaveEdit(ApplicationUser model)
         {
             if (!ModelState.IsValid)
@@ -190,12 +228,16 @@ namespace E_Commerce.Web.Controllers
             TempData["SuccessMessage"] = "Profile updated successfully!";
             return RedirectToAction("Profile");
         }
+
         [HttpGet]
+        [Authorize(Roles = Roles.Customer)]
         public IActionResult ResetPassword()
         {
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.Customer)]
         public async Task<IActionResult> ResetPassword(ResetPasswordVM model)
         {
             if (!ModelState.IsValid)
