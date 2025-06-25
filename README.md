@@ -1,72 +1,84 @@
-# 🛍️ E-Commerce Web App
+# 🛒 E-Commerce Web App
 
-This is a full-featured e-commerce web application built with **ASP.NET MVC**, designed primarily for grocery and general product sales. It supports both **Admin** and **Customer** roles and includes a dynamic home page, shopping cart, real payment integration, and an admin dashboard.
+A full-featured e-commerce platform built with **ASP.NET MVC**, focused on grocery & general product sales. It supports both **Admin** and **Customer** roles, a dynamic homepage, shopping cart, order management, and real **Paymob** payment integration (test mode).
 
 ---
 
 ## 🚀 Features
 
-### 👤 User Side
+### 👤 Customer Side
 - Register / Login / Logout
-- Dynamic home page:
+- Dynamic Home Page (controlled by Admin):
   - Top Categories
   - Best Sellers
-  - Category Sections
-- Product search and filtering
-- Product details with related items
-- Shopping cart stored via cookies (GUID-based)
-- Checkout flow with:
+  - Category-based Product Sections
+- Product Search (AJAX + Pagination)
+- Product Details with Related Items
+- Add to Cart (AJAX)
+- Shopping Cart:
+  - Quantity updates via AJAX
+  - Cart stored with cookie & GUID (30 days)
+  - Merges with user account on login
+- Checkout:
   - Order summary
-  - Paymob payment gateway integration (test mode)
-- Profile page with:
-  - View & edit personal information
-  - View past orders and order details
-  - Reset password securely
-
----
+  - Paymob Payment Integration
+- Profile:
+  - View & update details
+  - Change password
+  - View order history
 
 ### 🛠 Admin Side
-- Admin dashboard with real-time stats:
-  - Today's sales & total
-  - Last 30 days stats
-- Full management system:
-  - Categories (mark as top / section)
-  - Products (mark as best seller)
-  - Users (view data & orders)
-  - Orders (verify via Paymob API)
-- AJAX-based:
-  - Pagination
-  - Search and filtering
-  - SweetAlert confirmation on deletion
+- Dashboard with daily/monthly order stats
+- Manage Categories & Products:
+  - Mark categories for homepage (in top categories section /display it as sperated section on the home page)
+  - Mark products as Best Sellers
+- User Management:
+  - List, search, and view users and their orders
+- Orders:
+  - Filter by status/date
+  - Verify real payment status via Paymob API
+  - One-click verification for all pending orders
+- All tables:
+  - AJAX pagination & search
+  - SweetAlert2 delete confirmations
 
 ---
 
-## 🧰 Technologies Used
+## 🧰 Technologies
 
-- ASP.NET MVC (with layered Clean-ish Architecture)
-- Entity Framework Core
-- Identity (User management & auth)
-- Paymob Payment Integration (Test Mode)
-- AJAX (jQuery + Partial Views)
-- Bootstrap 5 + FontAwesome
-- SweetAlert2 for confirmation dialogs
-
----
-
-## 📂 Architecture
-
-- Clean Architecture-inspired layering:
-  - Domain
-  - Infrastructure
-  - Application / Service Layer
-  - Web (MVC)
-- Repository Pattern + Unit of Work
-- Generic Repositories + Specific Repos
+- ASP.NET Core 9 MVC
+- Entity Framework Core (Code-First)
+- ASP.NET Identity
+- Paymob API (Test Mode)
+- Bootstrap 
+- AJAX & Partial Views
+- SweetAlert2
 
 ---
 
-## 💻 Running the Project Locally
+## 🧱 Architecture
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+Follows a **Clean Architecture-inspired** structure:
+
+- Domain Layer  
+- Application Layer  
+- Infrastructure Layer  
+- Web (MVC)
+
+Includes:
+- Generic & Custom Repositories
+- Unit of Work Pattern
+- Service Layer
+
+> 🧪 Still evolving. A solid starting point for Clean Architecture.
+
+---
+
+## 📌 Notes
+
+- 🔒 Paymob integration is **test mode only**, no real transactions.
+- ✅ Order verification uses actual Paymob API calls (not mock).
+- ⚙️ Admin fully controls homepage content (dynamic sections).
+- 🧠 Cart uses GUID stored in cookie (30 days) and links to user on login.
+- 🔍 Product search and all tables use AJAX (search + pagination).
+- 🛠 The project uses real architectural patterns (UoW, Repos, Services).
