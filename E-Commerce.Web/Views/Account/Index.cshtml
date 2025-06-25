@@ -32,8 +32,8 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="SearchInput" placeholder="Search by User Email...">
-                                <button class="btn btn-outline-secondary" type="button" id="SearchBtn">
+                                <input type="text" class="form-control" id="SearchInputEmail" placeholder="Search by User Email...">
+                                <button class="btn btn-outline-secondary" type="button" id="SearchBtnEmail">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
@@ -51,12 +51,12 @@
 @section Scripts{
     <script>
         $(document).ready(function(){
-            $('#SearchBtn').on('click',function(){
-                var input = $('#SearchInput').val();
+            $('#SearchBtnEmail').on('click',function(){
+                var input = $('#SearchInputEmail').val();
                 if(!input){return;}
                 $('#UsersTable').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
                 $.ajax({
-                    url: '@Url.Action("SearchById","Account")',
+                    url: '@Url.Action("Search","Account")',
                     data: {Email: input},
                     success: function(result){
                         $('#UsersTable').html(result);

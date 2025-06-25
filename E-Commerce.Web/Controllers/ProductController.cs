@@ -96,7 +96,6 @@ namespace E_Commerce.Web.Controllers
 
         [HttpDelete]
         [Authorize(Roles = Roles.Admin)]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             return await _productService.DeleteAsync(id) ? Ok() : BadRequest();

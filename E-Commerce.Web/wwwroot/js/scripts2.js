@@ -29,9 +29,9 @@ window.addEventListener('DOMContentLoaded', event => {
 
 //======================================================================================================================================
 
-// deletebtn sweet alert
 $(document).ready(function () {
-    $('.DeleteBtn').on('click', function (e) {
+    // delete button
+    $(document).on('click', '.DeleteBtn', function (e) {
         e.preventDefault();
         var btn = $(this);
 
@@ -42,12 +42,11 @@ $(document).ready(function () {
             showCancelButton: true,
             cancelButtonColor: "#3085d6",
             confirmButtonColor: "#d33",
-
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: btn.data('name')+'/Delete/'+ btn.data('id'),
+                    url: btn.data('name') + '/Delete/' + btn.data('id'),
                     method: 'DELETE',
                     success: function () {
                         Swal.fire({
@@ -69,7 +68,5 @@ $(document).ready(function () {
         });
     });
 });
-
-
 
 

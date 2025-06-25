@@ -78,7 +78,7 @@ namespace E_Commerce.Web.Controllers
         }
 
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> SearchById(string Email)
+        public async Task<IActionResult> Search(string Email)
         {
             if (string.IsNullOrEmpty(Email))
             {
@@ -89,7 +89,7 @@ namespace E_Commerce.Web.Controllers
             {
                 return NotFound($"User with Email {Email} not found.");
             }
-            return PartialView("_UsersTable", new List<ApplicationUser> { user });
+            return PartialView("_UsersTable", new PagedResult<ApplicationUser> { Items = new List<ApplicationUser> { user }, TotalCount = 1, PageNumber = 1, PageSize = 1 });
         }
         [HttpGet]
         public IActionResult Register()

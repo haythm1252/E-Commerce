@@ -71,7 +71,6 @@ namespace E_Commerce.Web.Controllers
         }
 
         [HttpDelete]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _CategoryService.DeleteAsync(id);
