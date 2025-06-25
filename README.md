@@ -2,6 +2,7 @@
 
 A full-featured e-commerce platform built with **ASP.NET MVC**, focused on grocery & general product sales. It supports both **Admin** and **Customer** roles, a dynamic homepage, shopping cart, order management, and real **Paymob** payment integration (test mode).
 
+Linkedin post with video: https://www.linkedin.com/posts/haythm-ibrahim_id-like-to-share-my-latest-project-a-full-stack-activity-7343682564244606976-WYR2?utm_source=share&utm_medium=member_desktop&rcm=ACoAAC2G9-sBG89X5TLl0Oq44BvH73IRCqyUn8o
 ---
 
 ## 🚀 Features
